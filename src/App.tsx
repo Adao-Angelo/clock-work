@@ -1,5 +1,14 @@
 import "@fontsource/roboto";
-import { Ellipsis, Pause, Play, Plus, RotateCcw, X } from "lucide-react";
+import {
+  BookmarkCheck,
+  Ellipsis,
+  Pause,
+  Play,
+  Plus,
+  RotateCcw,
+  Trash,
+  X,
+} from "lucide-react";
 
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -14,25 +23,75 @@ import {
   requestPermission,
   sendNotification,
 } from "@tauri-apps/plugin-notification";
+import { v4 } from "uuid";
+import { Dropdown } from "./components/Dropdown";
 import { Task } from "./components/task";
+import type { TaskType } from "./types";
 
 function App() {
   const [isCounting, setIsCounting] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(5);
+  const [timer, setTimer] = useState<number>(100);
+
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [textAreaTask, setTextAreaTask] = useState("");
+  const [tasks, setTasks] = useState<TaskType[]>([]);
 
   const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
   const seconds = String(timer % 60).padStart(2, "0");
 
   const reloadTimer = () => {
-    setTimer(5);
+    setTimer(100);
     toast("You reset the timer");
+  };
+
+  const createTask = (taskDescription: string) => {
+    const task: TaskType = {
+      id: v4(),
+      title: taskDescription,
+      isComplete: false,
+    };
+
+    tasks.push(task);
+    closeModal();
+  };
+
+  const finishTaskById = (id: string) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, isComplete: true } : task
+    );
+    setTasks(updatedTasks);
+    toast("Task marked as completed");
+  };
+
+  const deleteTaskById = (id: string) => {
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
+    toast("Task deleted");
+  };
+
+  const playNotificationSound = () => {
+    const audio = new Audio("/notify.mp3");
+    audio.play().catch((error) => {
+      toast.error(`Error playing sound ${error}`);
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (textAreaTask.trim()) {
+      createTask(textAreaTask);
+      setTextAreaTask("");
+    } else {
+      toast.warning("You must provide a task description.");
+    }
   };
 
   function openModal() {
     setIsOpen(true);
   }
-  function afterOpenModal() {}
+  function afterOpenModal() {
+    document.getElementById("task-input")?.focus();
+  }
 
   function closeModal() {
     setIsOpen(false);
@@ -59,10 +118,19 @@ function App() {
       }, 1000);
 
       return () => clearInterval(timerInterval);
-    } else if (timer == 0) {
+    } else if (timer == 0 && tasks.length > 0) {
+      playNotificationSound();
       toast("Time's up!");
     }
   }, [timer, isCounting]);
+
+  useEffect(() => {
+    if (tasks.length === 0) {
+      setIsCounting(false);
+      setTimer(0);
+    }
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <main className="bg-zinc-900 w-full p-[4rem] min-h-[100vh] text-zinc-50 flex justify-center items-center">
@@ -92,37 +160,41 @@ function App() {
         </div>
 
         <div className="w-[full] grid gap-[1rem]  p-[2rem]">
-          <Task.Root>
-            <Task.Icon />
-            <Task.Content content="Create a new nod app" />
-            <Task.Action>
-              <Ellipsis />
-            </Task.Action>
-          </Task.Root>
-          <Task.Root>
-            <Task.Icon isComplete />
-            <Task.Content
-              content="Desktop app built with Tauri (React + Rust) for enhanced focus and productivity. "
-              isCompleted
-            />
-            <Task.Action>
-              <Ellipsis />
-            </Task.Action>
-          </Task.Root>
-          <Task.Root>
-            <Task.Icon />
-            <Task.Content content="Create a new nod app" />
-            <Task.Action>
-              <Ellipsis />
-            </Task.Action>
-          </Task.Root>
-          <Task.Root>
-            <Task.Icon />
-            <Task.Content content="Create a new nod app" />
-            <Task.Action>
-              <Ellipsis />
-            </Task.Action>
-          </Task.Root>
+          {tasks.map((task) => (
+            <Task.Root key={task.id}>
+              <Task.Icon isCompleted={task.isComplete} />
+              <Task.Content
+                isCompleted={task.isComplete}
+                content={task.title}
+              />
+              <Task.Action Icon={<Ellipsis></Ellipsis>}>
+                <Dropdown.Header>
+                  <span className="block truncate text-2xl font-roboto font-medium">
+                    Task actions
+                  </span>
+                </Dropdown.Header>
+                <Dropdown.Item
+                  onClick={() => {
+                    deleteTaskById(task.id);
+                  }}
+                >
+                  <div className="flex items-center gap-[1rem]">
+                    <Trash size={24} /> Delete task
+                  </div>
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    finishTaskById(task.id);
+                  }}
+                >
+                  <div className="flex items-center gap-[1rem]">
+                    <BookmarkCheck size={24} />
+                    finish
+                  </div>
+                </Dropdown.Item>
+              </Task.Action>
+            </Task.Root>
+          ))}
         </div>
       </div>
 
@@ -141,17 +213,20 @@ function App() {
             : { transform: "translate(-50%, -50%) scale(0.95)", opacity: 0 },
         }}
       >
-        <div>
+        <form onSubmit={handleSubmit}>
           <div>
             <div className="flex justify-between items-center mb-[2rem]">
               <h2 className="text-2xl">Create new task.</h2>
               <Button onClick={closeModal}>
-                <X className="text-violet-400"></X>
+                <X className="text-violet-400" />
               </Button>
             </div>
             <textarea
               className="w-full bg-zinc-800 font-roboto text-2xl p-[1rem] outline-none rounded-md"
               placeholder="Enter your task"
+              value={textAreaTask}
+              onChange={(e) => setTextAreaTask(e.target.value)}
+              id="task-input"
             ></textarea>
           </div>
           <div className="flex justify-between w-full my-[1rem]">
@@ -162,7 +237,7 @@ function App() {
               <p className="m-auto">Save task</p>
             </Button>
           </div>
-        </div>
+        </form>
       </Modal>
     </main>
   );

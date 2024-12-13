@@ -1,17 +1,17 @@
 import { Clipboard, ClipboardCheck } from "lucide-react";
 
 interface TaskIconProps {
-  isComplete?: boolean;
+  isCompleted?: boolean;
 }
 
-export const TaskIcon: React.FC<TaskIconProps> = ({ isComplete }) => {
+export const TaskIcon: React.FC<TaskIconProps> = ({ isCompleted }) => {
   return (
     <div
       className={`flex gap-[1rem] items-center ${
-        isComplete ? "text-zinc-500" : ""
+        isCompleted ? "text-zinc-500" : ""
       }`}
     >
-      {isComplete ? <ClipboardCheck /> : <Clipboard></Clipboard>}
+      {isCompleted ? <ClipboardCheck /> : <Clipboard></Clipboard>}
     </div>
   );
 };
