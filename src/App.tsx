@@ -30,7 +30,7 @@ import type { TaskType } from "./types";
 
 function App() {
   const [isCounting, setIsCounting] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(100);
+  const [timer, setTimer] = useState<number>(1500);
 
   const [modalIsOpen, setIsOpen] = useState(false);
   const [textAreaTask, setTextAreaTask] = useState("");
@@ -40,7 +40,7 @@ function App() {
   const seconds = String(timer % 60).padStart(2, "0");
 
   const reloadTimer = () => {
-    setTimer(100);
+    setTimer(1500);
     toast("You reset the timer");
   };
 
