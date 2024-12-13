@@ -40,7 +40,7 @@ function App() {
 
   const sendNotificationApp = async () => {
     let permissionGranted = await isPermissionGranted();
-    alert("good");
+
     if (!permissionGranted) {
       const permission = await requestPermission();
       permissionGranted = permission === "granted";
@@ -52,6 +52,7 @@ function App() {
   };
 
   useEffect(() => {
+    sendNotificationApp();
     if (isCounting && timer > 0) {
       const timerInterval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
@@ -64,7 +65,7 @@ function App() {
   }, [timer, isCounting]);
 
   return (
-    <main className="bg-zinc-900 w-full h-[100vh] text-zinc-50 flex justify-center items-center">
+    <main className="bg-zinc-900 w-full p-[4rem] min-h-[100vh] text-zinc-50 flex justify-center items-center">
       <div className="p-[2rem] w-[40rem]">
         <h1 className="font-roboto font-semibold text-9xl text-center ">
           {`${minutes}:${seconds}`}
@@ -104,6 +105,13 @@ function App() {
               content="Desktop app built with Tauri (React + Rust) for enhanced focus and productivity. "
               isCompleted
             />
+            <Task.Action>
+              <Ellipsis />
+            </Task.Action>
+          </Task.Root>
+          <Task.Root>
+            <Task.Icon />
+            <Task.Content content="Create a new nod app" />
             <Task.Action>
               <Ellipsis />
             </Task.Action>
