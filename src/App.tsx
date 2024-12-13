@@ -90,7 +90,7 @@ function App() {
           </Button>
         </div>
 
-        <div className="w-[full] h-[18rem] grid gap-[1rem] overflow-y-scroll p-[2rem]">
+        <div className="w-[full] grid gap-[1rem]  p-[2rem]">
           <Task.Root>
             <Task.Icon />
             <Task.Content content="Create a new nod app" />
@@ -124,8 +124,8 @@ function App() {
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
-        overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-out"
-        className="w-[35rem] text-zinc-50 bg-zinc-900 rounded-lg p-[2rem] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-out scale-95 opacity-0"
+        overlayClassName="p-[30rem] fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-out"
+        className="w-[30rem] sm:w-[40rem] text-zinc-50 bg-zinc-900 rounded-lg p-[2rem] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-out scale-95 opacity-0"
         style={{
           overlay: modalIsOpen ? { opacity: 1 } : { opacity: 0 },
           content: modalIsOpen
