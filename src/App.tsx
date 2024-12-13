@@ -1,24 +1,25 @@
 import "@fontsource/roboto";
-import {
-  Clipboard,
-  ClipboardCheck,
-  Ellipsis,
-  Pause,
-  Play,
-  Plus,
-  RotateCcw,
-} from "lucide-react";
+import { Ellipsis, Pause, Play, Plus, RotateCcw, X } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import "./App.css";
 
+import Modal from "react-modal";
 import Button from "./components/Button";
 
 import { toast, ToastContainer } from "./lib/react-toastify";
 
+import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification,
+} from "@tauri-apps/plugin-notification";
+import { Task } from "./components/task";
+
 function App() {
   const [isCounting, setIsCounting] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(5);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
   const seconds = String(timer % 60).padStart(2, "0");
@@ -26,6 +27,28 @@ function App() {
   const reloadTimer = () => {
     setTimer(5);
     toast("You reset the timer");
+  };
+
+  function openModal() {
+    setIsOpen(true);
+  }
+  function afterOpenModal() {}
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const sendNotificationApp = async () => {
+    let permissionGranted = await isPermissionGranted();
+    alert("good");
+    if (!permissionGranted) {
+      const permission = await requestPermission();
+      permissionGranted = permission === "granted";
+    }
+
+    if (permissionGranted) {
+      sendNotification({ title: "Tauri", body: "Tauri is awesome!" });
+    }
   };
 
   useEffect(() => {
@@ -62,55 +85,77 @@ function App() {
               <Play className="text-violet-400"></Play>
             )}
           </Button>
-          <Button>
+          <Button onClick={openModal}>
             <Plus className="text-violet-400"></Plus>
           </Button>
         </div>
 
         <div className="w-[full] h-[18rem] grid gap-[1rem] overflow-y-scroll p-[2rem]">
-          <div className="flex items-center text-zinc-400 justify-between bg-zinc-950 p-[1rem] rounded-md">
-            <div className="flex gap-[1rem] items-center">
-              <ClipboardCheck></ClipboardCheck>
-              <p className="font-roboto  line-through font-light text-2xl">
-                Create a new screen node
-              </p>
-            </div>
-
-            <Button className="text-zinc-50">
-              <Ellipsis></Ellipsis>
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-between bg-zinc-950 p-[1rem] rounded-md">
-            <div className="flex gap-[1rem] items-center">
-              <Button>
-                <Clipboard></Clipboard>
-              </Button>
-              <p className="font-roboto  font-light text-2xl">
-                Create a new screen node
-              </p>
-            </div>
-
-            <Button>
-              <Ellipsis></Ellipsis>
-            </Button>
-          </div>
-          <div className="flex items-center justify-between bg-zinc-950 p-[1rem] rounded-md">
-            <div className="flex gap-[1rem] items-center">
-              <ClipboardCheck></ClipboardCheck>
-              <p className="font-roboto  font-light text-2xl">
-                Create a new screen node
-              </p>
-            </div>
-
-            <Button>
-              <Ellipsis></Ellipsis>
-            </Button>
-          </div>
+          <Task.Root>
+            <Task.Icon />
+            <Task.Content content="Create a new nod app" />
+            <Task.Action>
+              <Ellipsis />
+            </Task.Action>
+          </Task.Root>
+          <Task.Root>
+            <Task.Icon isComplete />
+            <Task.Content
+              content="Desktop app built with Tauri (React + Rust) for enhanced focus and productivity. "
+              isCompleted
+            />
+            <Task.Action>
+              <Ellipsis />
+            </Task.Action>
+          </Task.Root>
+          <Task.Root>
+            <Task.Icon />
+            <Task.Content content="Create a new nod app" />
+            <Task.Action>
+              <Ellipsis />
+            </Task.Action>
+          </Task.Root>
         </div>
       </div>
 
       <ToastContainer theme="dark" />
+
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-out"
+        className="w-[35rem] text-zinc-50 bg-zinc-900 rounded-lg p-[2rem] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-out scale-95 opacity-0"
+        style={{
+          overlay: modalIsOpen ? { opacity: 1 } : { opacity: 0 },
+          content: modalIsOpen
+            ? { transform: "translate(-50%, -50%) scale(1)", opacity: 1 }
+            : { transform: "translate(-50%, -50%) scale(0.95)", opacity: 0 },
+        }}
+      >
+        <div>
+          <div>
+            <div className="flex justify-between items-center mb-[2rem]">
+              <h2 className="text-2xl">Create new task.</h2>
+              <Button onClick={closeModal}>
+                <X className="text-violet-400"></X>
+              </Button>
+            </div>
+            <textarea
+              className="w-full bg-zinc-800 font-roboto text-2xl p-[1rem] outline-none rounded-md"
+              placeholder="Enter your task"
+            ></textarea>
+          </div>
+          <div className="flex justify-between w-full my-[1rem]">
+            <Button
+              className="bg-violet-600 text-center w-full flex gap-[1rem] items-center font-roboto font-medium text-2xl rounded-md p-[1rem] hover:bg-violet-500"
+              type="submit"
+            >
+              <p className="m-auto">Save task</p>
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 }
