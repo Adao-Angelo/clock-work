@@ -9,7 +9,7 @@ export const TaskContent: React.FC<TaskContentProps> = ({
 }) => {
   return (
     <p
-      className={`font-roboto font-light text-2xl ${
+      className={`font-roboto flex-grow font-light text-left text-2xl ${
         isCompleted ? "line-through text-zinc-500" : ""
       }`}
     >
