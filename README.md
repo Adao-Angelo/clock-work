@@ -22,6 +22,22 @@ This is a sleek and efficient desktop application for the clock work technique, 
 - Lightweight and fast performance.
 - Cross-platform compatibility.
 
+## 📊 Project Status
+
+Here is an overview of implemented and pending features:
+
+### Implemented Features
+- [x] Standard timer for work and break intervals.
+- [x] Simple user interface for timer control.
+
+### Pending Features
+- [ ] Light and dark mode.
+- [ ] Setting work and break times directly in the app.
+- [ ] Generation of reports on tasks performed:
+  - Total hours worked.
+  - Total breaks taken.
+- [ ] Storage system for performed tasks (store).
+
 ## 🚀 Getting Started
 
 1. Clone the repository:
@@ -41,9 +57,17 @@ pnpm install
 ```bash
 pnpm run tauri dev
 ```
-
 ---
 
 ## 📚 Documentation
 
 For detailed documentation on setting up and using the app, refer to the [Tauri Docs](https://tauri.app) and [React Docs](https://reactjs.org/docs/getting-started.html).
+
+
+
+
+
+
+
+
+
