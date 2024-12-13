@@ -3,30 +3,67 @@ import {
   Clipboard,
   ClipboardCheck,
   Ellipsis,
+  Pause,
   Play,
   Plus,
   RotateCcw,
 } from "lucide-react";
+
+import { useEffect, useState } from "react";
 import "./App.css";
+
 import Button from "./components/Button";
 
+import { toast, ToastContainer } from "./lib/react-toastify";
+
 function App() {
+  const [isCounting, setIsCounting] = useState<boolean>(false);
+  const [timer, setTimer] = useState<number>(5);
+
+  const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
+  const seconds = String(timer % 60).padStart(2, "0");
+
+  const reloadTimer = () => {
+    setTimer(5);
+    toast("You reset the timer");
+  };
+
+  useEffect(() => {
+    if (isCounting && timer > 0) {
+      const timerInterval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+
+      return () => clearInterval(timerInterval);
+    } else if (timer == 0) {
+      toast("Time's up!");
+    }
+  }, [timer, isCounting]);
+
   return (
     <main className="bg-zinc-900 w-full h-[100vh] text-zinc-50 flex justify-center items-center">
       <div className="p-[2rem] w-[40rem]">
         <h1 className="font-roboto font-semibold text-9xl text-center ">
-          20:00
+          {`${minutes}:${seconds}`}
         </h1>
 
         <div className="flex w-[30rem] m-auto justify-between my-[4rem] ">
-          <Button>
-            <RotateCcw></RotateCcw>
+          <Button onClick={reloadTimer}>
+            <RotateCcw className="text-violet-400"></RotateCcw>
+          </Button>
+          <Button
+            onClick={() => {
+              setIsCounting(!isCounting);
+            }}
+          >
+            {isCounting ? (
+              <Pause className="text-violet-400"></Pause>
+            ) : (
+              <Play className="text-violet-400"></Play>
+            )}
           </Button>
           <Button>
-            <Play className=""></Play>
-          </Button>
-          <Button>
-            <Plus></Plus>
+            <Plus className="text-violet-400"></Plus>
           </Button>
         </div>
 
@@ -72,6 +109,8 @@ function App() {
           </div>
         </div>
       </div>
+
+      <ToastContainer theme="dark" />
     </main>
   );
 }
