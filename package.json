@@ -10,13 +10,19 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.1.0",
+    "@radix-ui/themes": "^3.1.6",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
+    "@windmill/react-ui": "^0.6.0",
+    "lucide-react": "^0.468.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.3.5"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
+    "@types/node": "^22.10.2",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.2.1",
