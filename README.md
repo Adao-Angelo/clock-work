@@ -31,7 +31,7 @@ Here is an overview of implemented and pending features:
 - [x] Simple user interface for timer control.
 
 ### Pending Features
-- [ ] Light and dark mode.
+- [x] Light and dark mode.
 - [ ] Setting work and break times directly in the app.
 - [ ] Generation of reports on tasks performed:
   - Total hours worked.
