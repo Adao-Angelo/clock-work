@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "clock-work",
-        "width": 500,
-        "height": 700
+        "width": 600,
+        "height": 600
       }
     ],
     "security": {
