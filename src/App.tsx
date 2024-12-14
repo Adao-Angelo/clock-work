@@ -6,6 +6,7 @@ import {
   Play,
   Plus,
   RotateCcw,
+  Settings,
   Trash,
   X,
 } from "lucide-react";
@@ -29,9 +30,11 @@ import { Task } from "./components/task";
 import usePreferredTheme from "./hooks/usePreferredTheme";
 import type { TaskType } from "./types";
 
+const startTime = 1500;
+
 function App() {
   const [isCounting, setIsCounting] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(1500);
+  const [timer, setTimer] = useState<number>(startTime);
   const theme = usePreferredTheme();
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -42,7 +45,7 @@ function App() {
   const seconds = String(timer % 60).padStart(2, "0");
 
   const reloadTimer = () => {
-    setTimer(1500);
+    setTimer(startTime);
     toast("You reset the timer");
   };
 
@@ -159,6 +162,9 @@ function App() {
           <Button onClick={openModal}>
             <Plus className="text-violet-700 dark:text-violet-400"></Plus>
           </Button>
+          <Button>
+            <Settings className="text-violet-700 dark:text-violet-400"></Settings>
+          </Button>
         </div>
 
         <div className="w-[full] grid gap-[1rem]  p-[2rem]">
@@ -220,7 +226,7 @@ function App() {
             <div className="flex justify-between items-center mb-[2rem]">
               <h2 className="text-2xl">Create new task.</h2>
               <Button onClick={closeModal}>
-                <X className="text-violet-700 darK:text-violet-400" />
+                <X className="text-violet-700 dark:text-violet-400" />
               </Button>
             </div>
             <textarea
