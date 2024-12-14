@@ -45,7 +45,7 @@ export const DropdownRoot: React.FC<DropdownRootProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 w-56 origin-top-right z-10 rounded-md shadow-lg bg-zinc-950 ring-1 ring-zinc-50 ring-opacity-5 focus:outline-none">
+        <div className="absolute right-0 w-56 origin-top-right z-10 rounded-md shadow-lg bg-zinc-50  dark:bg-zinc-950  ring-1 ring-zinc-50 ring-opacity-5 focus:outline-none">
           <div className="py-0">{children}</div>
         </div>
       )}
@@ -59,7 +59,7 @@ interface DropdownHeaderProps {
 
 export const DropdownHeader: React.FC<DropdownHeaderProps> = ({ children }) => {
   return (
-    <div className="px-4 py-3 text-2xl font-roboto border-b border-zinc-900">
+    <div className="px-4 py-3 text-2xl font-roboto border-b border-zinc-100 dark:border-zinc-900">
       {children}
     </div>
   );
@@ -76,7 +76,7 @@ export const DropdownItem: React.FC<DropdownItemProps> = ({
 }) => {
   return (
     <button
-      className="block px-4 py-2 text-[1.3rem] text-zinc-50 z-0 hover:bg-zinc-900 w-full text-left font-roboto"
+      className="block px-4 py-2 text-[1.3rem] text-zinc-950  dark:text-zinc-50  z-0 hover:bg-zinc-100  dark:hover:bg-zinc-900  w-full text-left font-roboto"
       onClick={onClick}
     >
       {children}

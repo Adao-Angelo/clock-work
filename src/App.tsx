@@ -26,11 +26,13 @@ import {
 import { v4 } from "uuid";
 import { Dropdown } from "./components/Dropdown";
 import { Task } from "./components/task";
+import usePreferredTheme from "./hooks/usePreferredTheme";
 import type { TaskType } from "./types";
 
 function App() {
   const [isCounting, setIsCounting] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(1500);
+  const theme = usePreferredTheme();
 
   const [modalIsOpen, setIsOpen] = useState(false);
   const [textAreaTask, setTextAreaTask] = useState("");
@@ -133,7 +135,7 @@ function App() {
   }, [tasks]);
 
   return (
-    <main className="bg-zinc-900 w-full p-[4rem] min-h-[100vh] text-zinc-50 flex justify-center items-center">
+    <main className="dark:bg-zinc-900 bg-zinc-50 w-full p-[4rem] min-h-[100vh]  dark:text-zinc-50 text-zinc-900 flex justify-center items-center">
       <div className="p-[2rem] w-[40rem]">
         <h1 className="font-roboto font-semibold text-9xl text-center ">
           {`${minutes}:${seconds}`}
@@ -141,7 +143,7 @@ function App() {
 
         <div className="flex w-[30rem] m-auto justify-between my-[4rem] ">
           <Button onClick={reloadTimer}>
-            <RotateCcw className="text-violet-400"></RotateCcw>
+            <RotateCcw className="text-violet-700 dark:text-violet-400"></RotateCcw>
           </Button>
           <Button
             onClick={() => {
@@ -149,13 +151,13 @@ function App() {
             }}
           >
             {isCounting ? (
-              <Pause className="text-violet-400"></Pause>
+              <Pause className="text-violet-700 dark:text-violet-400"></Pause>
             ) : (
-              <Play className="text-violet-400"></Play>
+              <Play className="text-violet-700 dark:text-violet-400"></Play>
             )}
           </Button>
           <Button onClick={openModal}>
-            <Plus className="text-violet-400"></Plus>
+            <Plus className="text-violet-700 dark:text-violet-400"></Plus>
           </Button>
         </div>
 
@@ -198,14 +200,14 @@ function App() {
         </div>
       </div>
 
-      <ToastContainer theme="dark" />
+      <ToastContainer theme={theme} />
 
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         overlayClassName="p-[30rem] fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-out"
-        className="w-[30rem] sm:w-[40rem] text-zinc-50 bg-zinc-900 rounded-lg p-[2rem] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-out scale-95 opacity-0"
+        className="w-[30rem] sm:w-[40rem] dark:text-zinc-50 text-zinc-900 bg-zinc-50 dark:bg-zinc-900 rounded-lg p-[2rem] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-out scale-95 opacity-0"
         style={{
           overlay: modalIsOpen ? { opacity: 1 } : { opacity: 0 },
           content: modalIsOpen
@@ -218,11 +220,11 @@ function App() {
             <div className="flex justify-between items-center mb-[2rem]">
               <h2 className="text-2xl">Create new task.</h2>
               <Button onClick={closeModal}>
-                <X className="text-violet-400" />
+                <X className="text-violet-700 darK:text-violet-400" />
               </Button>
             </div>
             <textarea
-              className="w-full bg-zinc-800 font-roboto text-2xl p-[1rem] outline-none rounded-md"
+              className="w-full bg-zinc-100 dark:bg-zinc-800 font-roboto text-2xl p-[1rem] outline-none rounded-md"
               placeholder="Enter your task"
               value={textAreaTask}
               onChange={(e) => setTextAreaTask(e.target.value)}
@@ -231,7 +233,7 @@ function App() {
           </div>
           <div className="flex justify-between w-full my-[1rem]">
             <Button
-              className="bg-violet-600 text-center w-full flex gap-[1rem] items-center font-roboto font-medium text-2xl rounded-md p-[1rem] hover:bg-violet-500"
+              className="bg-violet-600 text-zinc-50 text-center w-full flex gap-[1rem] items-center font-roboto font-medium text-2xl rounded-md p-[1rem] hover:bg-violet-500"
               type="submit"
             >
               <p className="m-auto">Save task</p>
