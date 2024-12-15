@@ -30,7 +30,7 @@ import { Task } from "./components/task";
 import usePreferredTheme from "./hooks/usePreferredTheme";
 import { TaskType, TimerMode } from "./types";
 
-const startTime = 5;
+const startTime = 1500;
 const breakTime = 300;
 
 function App() {
@@ -167,8 +167,8 @@ function App() {
             }}
             className={`${
               timerMode == "tomato"
-                ? "bg-violet-500 rounded-sm hover:bg-violet-400"
-                : "bg-zinc-800  rounded-sm hover:bg-zinc-700"
+                ? "bg-violet-700 text-zinc-50 dark:bg-violet-500 rounded-sm hover:bg-violet-500 dark:hover:bg-violet-400"
+                : "bg-zinc-200  dark:bg-zinc-800  rounded-sm hover:bg-zinc-300 dark:hover:bg-zinc-700"
             } p-[1rem] font-bold font-roboto text-2xl w-[48%]`}
           >
             Tomato
@@ -179,8 +179,8 @@ function App() {
             }}
             className={`${
               timerMode == "break"
-                ? "bg-violet-500 rounded-sm hover:bg-violet-400"
-                : "bg-zinc-800  rounded-sm hover:bg-zinc-700"
+                ? "bg-violet-700 text-zinc-50 dark:bg-violet-500 rounded-sm hover:bg-violet-500 dark:hover:bg-violet-400"
+                : "bg-zinc-200  dark:bg-zinc-800  rounded-sm hover:bg-zinc-300 dark:hover:bg-zinc-700"
             } p-[1rem] font-bold font-roboto text-2xl w-[48%]`}
           >
             Break
