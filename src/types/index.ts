@@ -3,3 +3,5 @@ export type TaskType = {
   title: string;
   isComplete: boolean;
 };
+
+export type TimerMode = "tomato" | "break";

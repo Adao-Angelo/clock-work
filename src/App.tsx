@@ -28,13 +28,19 @@ import { v4 } from "uuid";
 import { Dropdown } from "./components/Dropdown";
 import { Task } from "./components/task";
 import usePreferredTheme from "./hooks/usePreferredTheme";
-import type { TaskType } from "./types";
+import { TaskType, TimerMode } from "./types";
 
-const startTime = 1500;
+const startTime = 5;
+const breakTime = 300;
 
 function App() {
   const [isCounting, setIsCounting] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(startTime);
+  const [timerMode, setTimerMode] = useState<TimerMode>("tomato");
+
+  const [timer, setTimer] = useState<number>(
+    timerMode === "break" ? breakTime : startTime
+  );
+
   const theme = usePreferredTheme();
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -44,9 +50,16 @@ function App() {
   const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
   const seconds = String(timer % 60).padStart(2, "0");
 
+  const changeTimerMode = (mode: TimerMode) => {
+    setTimerMode(mode);
+    setIsCounting(false);
+    const time = mode == "break" ? breakTime : startTime;
+    setTimer(time);
+  };
+
   const reloadTimer = () => {
-    setTimer(startTime);
-    toast("You reset the timer");
+    setTimer(timerMode === "break" ? breakTime : startTime);
+    setIsCounting(false);
   };
 
   const createTask = (taskDescription: string) => {
@@ -123,9 +136,16 @@ function App() {
       }, 1000);
 
       return () => clearInterval(timerInterval);
-    } else if (timer == 0 && tasks.length > 0) {
+    } else if (timer == 0) {
       playNotificationSound();
-      toast("Time's up!");
+
+      setIsCounting(false);
+      if (timerMode == "tomato") {
+        setTimerMode("break");
+        setTimer(breakTime);
+        toast(`Time's up! Your tomato is over.
+          Press 'Play' to start a break.`);
+      }
     }
   }, [timer, isCounting]);
 
@@ -140,30 +160,61 @@ function App() {
   return (
     <main className="dark:bg-zinc-900 bg-zinc-50 w-full p-[4rem] min-h-[100vh]  dark:text-zinc-50 text-zinc-900 flex justify-center items-center">
       <div className="p-[2rem] w-[40rem]">
+        <div className="flex justify-between p-[2rem] rounded-md mb-[2rem]">
+          <Button
+            onClick={() => {
+              changeTimerMode("tomato");
+            }}
+            className={`${
+              timerMode == "tomato"
+                ? "bg-violet-500 rounded-sm hover:bg-violet-400"
+                : "bg-zinc-800  rounded-sm hover:bg-zinc-700"
+            } p-[1rem] font-bold font-roboto text-2xl w-[48%]`}
+          >
+            Tomato
+          </Button>
+          <Button
+            onClick={() => {
+              changeTimerMode("break");
+            }}
+            className={`${
+              timerMode == "break"
+                ? "bg-violet-500 rounded-sm hover:bg-violet-400"
+                : "bg-zinc-800  rounded-sm hover:bg-zinc-700"
+            } p-[1rem] font-bold font-roboto text-2xl w-[48%]`}
+          >
+            Break
+          </Button>
+        </div>
+
         <h1 className="font-roboto font-semibold text-9xl text-center ">
           {`${minutes}:${seconds}`}
         </h1>
 
         <div className="flex w-[30rem] m-auto justify-between my-[4rem] ">
-          <Button onClick={reloadTimer}>
-            <RotateCcw className="text-violet-700 dark:text-violet-400"></RotateCcw>
+          <Button
+            className="text-violet-700 dark:text-violet-400"
+            onClick={reloadTimer}
+          >
+            <RotateCcw></RotateCcw>
           </Button>
           <Button
+            disabled={Number(timer) <= 0 ? true : false}
             onClick={() => {
               setIsCounting(!isCounting);
             }}
+            className="text-violet-700 dark:text-violet-400"
           >
-            {isCounting ? (
-              <Pause className="text-violet-700 dark:text-violet-400"></Pause>
-            ) : (
-              <Play className="text-violet-700 dark:text-violet-400"></Play>
-            )}
+            {isCounting ? <Pause></Pause> : <Play></Play>}
           </Button>
-          <Button onClick={openModal}>
-            <Plus className="text-violet-700 dark:text-violet-400"></Plus>
+          <Button
+            className="text-violet-700 dark:text-violet-400"
+            onClick={openModal}
+          >
+            <Plus></Plus>
           </Button>
-          <Button>
-            <Settings className="text-violet-700 dark:text-violet-400"></Settings>
+          <Button className="text-violet-700 dark:text-violet-400">
+            <Settings></Settings>
           </Button>
         </div>
 

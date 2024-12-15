@@ -23,9 +23,18 @@ interface ButtonPros {
   [key: string]: any;
 }
 
-export default function Button({ children, className, onClick }: ButtonPros) {
+export default function Button({
+  children,
+  className,
+  onClick,
+  disabled,
+}: ButtonPros) {
   return (
-    <button onClick={onClick} className={className}>
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className={`${disabled === true ? "text-zinc-400" : className}`}
+    >
       {children}
     </button>
   );
