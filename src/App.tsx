@@ -11,6 +11,8 @@ import {
   X,
 } from "lucide-react";
 
+import { useSearchParams } from "react-router-dom";
+
 import { useEffect, useState } from "react";
 import "./App.css";
 
@@ -34,6 +36,8 @@ const startTime = 1500;
 const breakTime = 300;
 
 function App() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [isCounting, setIsCounting] = useState<boolean>(false);
   const [timerMode, setTimerMode] = useState<TimerMode>("tomato");
 
@@ -43,7 +47,9 @@ function App() {
 
   const theme = usePreferredTheme();
 
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(
+    searchParams.get("isModalOpen") === "true"
+  );
   const [textAreaTask, setTextAreaTask] = useState("");
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
@@ -105,6 +111,11 @@ function App() {
   };
 
   function openModal() {
+    setSearchParams((state) => {
+      state.set("isModalOpen", String(true));
+
+      return state;
+    });
     setIsOpen(true);
   }
   function afterOpenModal() {
@@ -112,6 +123,11 @@ function App() {
   }
 
   function closeModal() {
+    setSearchParams((state) => {
+      state.delete("isModalOpen");
+
+      return state;
+    });
     setIsOpen(false);
   }
 
