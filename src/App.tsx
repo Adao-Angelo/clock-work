@@ -10,8 +10,8 @@ import {
   Trash,
   X,
 } from "lucide-react";
-
 import { useSearchParams } from "react-router-dom";
+import { Store } from "tauri-plugin-store-api";
 
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -68,15 +68,17 @@ function App() {
     setIsCounting(false);
   };
 
-  const createTask = (taskDescription: string) => {
+  const createTask = async (taskDescription: string) => {
     const task: TaskType = {
       id: v4(),
       title: taskDescription,
       isComplete: false,
     };
 
-    tasks.push(task);
+    setTextAreaTask("");
     closeModal();
+    tasks.push(task);
+    await saveTaskOnStorage();
   };
 
   const finishTaskById = (id: string) => {
@@ -108,6 +110,24 @@ function App() {
     } else {
       toast.warning("You must provide a task description.");
     }
+  };
+
+  const saveTaskOnStorage = async () => {
+    try {
+      const store = new Store(".tasks.dat");
+      await store.set("tasks", tasks);
+      toast(`task saved`);
+      await store.save();
+    } catch (error) {
+      toast.error(`Error saving data ${error}`);
+    }
+  };
+
+  const loadTasksFromStorage = async () => {
+    const store = new Store(".tasks.dat");
+    const storedTasks: TaskType[] = (await store.get("tasks")) || [];
+    await store.save();
+    setTasks(storedTasks);
   };
 
   function openModal() {
@@ -172,6 +192,10 @@ function App() {
     }
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    loadTasksFromStorage();
+  }, []);
 
   return (
     <main className="dark:bg-zinc-900 bg-zinc-50 w-full p-[4rem] min-h-[100vh]  dark:text-zinc-50 text-zinc-900 flex justify-center items-center">
