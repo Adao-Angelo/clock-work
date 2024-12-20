@@ -45,8 +45,6 @@ function App() {
     timerMode === "break" ? breakTime : startTime
   );
 
-  const theme = usePreferredTheme();
-
   const [modalIsOpen, setIsOpen] = useState(
     searchParams.get("isModalOpen") === "true"
   );
@@ -55,6 +53,8 @@ function App() {
 
   const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
   const seconds = String(timer % 60).padStart(2, "0");
+
+  const theme = usePreferredTheme();
 
   const changeTimerMode = (mode: TimerMode) => {
     setTimerMode(mode);
