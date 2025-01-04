@@ -78,7 +78,7 @@ function App() {
     setTextAreaTask("");
     closeModal();
     tasks.push(task);
-    await saveTaskOnStorage();
+    // await saveTaskOnStorage();
   };
 
   const finishTaskById = (id: string) => {
@@ -86,7 +86,6 @@ function App() {
       task.id === id ? { ...task, isComplete: true } : task
     );
     setTasks(updatedTasks);
-    toast("Task marked as completed");
   };
 
   const deleteTaskById = (id: string) => {
@@ -97,8 +96,8 @@ function App() {
 
   const playNotificationSound = () => {
     const audio = new Audio("/notify.mp3");
-    audio.play().catch((error) => {
-      toast.error(`Error playing sound ${error}`);
+    audio.play().catch(() => {
+      // toast.error(`Error playing sound ${error}`);
     });
   };
 
@@ -112,16 +111,16 @@ function App() {
     }
   };
 
-  const saveTaskOnStorage = async () => {
-    try {
-      const store = new Store(".tasks.dat");
-      await store.set("tasks", tasks);
-      toast(`task saved`);
-      await store.save();
-    } catch (error) {
-      toast.error(`Error saving data ${error}`);
-    }
-  };
+  // const saveTaskOnStorage = async () => {
+  //   try {
+  //     const store = new Store(".tasks.dat");
+  //     await store.set("tasks", tasks);
+  //     toast(`task saved`);
+  //     await store.save();
+  //   } catch (error) {
+  //     toast.error(`Error saving data ${error}`);
+  //   }
+  // };
 
   const loadTasksFromStorage = async () => {
     const store = new Store(".tasks.dat");
