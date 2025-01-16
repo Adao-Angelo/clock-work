@@ -29,9 +29,10 @@ Here is an overview of implemented and pending features:
 ### Implemented Features
 - [x] Standard timer for work and break intervals.
 - [x] Simple user interface for timer control.
+- [x] Light and dark mode.
 
 ### Pending Features
-- [x] Light and dark mode.
+
 - [ ] Setting work and break times directly in the app.
 - [ ] Generation of reports on tasks performed:
   - Total hours worked.
